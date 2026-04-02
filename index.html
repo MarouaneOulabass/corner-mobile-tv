@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Corner Mobile — Display</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#00f0ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="icon" href="icons/icon-192.svg">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Cairo:wght@400;700;900&family=Inter:wght@300;400;700&display=swap');
 
@@ -887,6 +893,11 @@ setTimeout(() => {
   const intro = document.getElementById('introOverlay');
   if (intro) intro.remove();
 }, 5000);
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
 
 </script>
 </body>

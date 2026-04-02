@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <radialGradient id="glow">
+      <stop offset="0%" stop-color="rgba(0,240,255,0.15)"/>
+      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+    </radialGradient>
+    <filter id="neon">
+      <feGaussianBlur stdDeviation="2.88" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="192" height="192" fill="#0a0a0f"/>
+  <circle cx="96" cy="96" r="86.4" fill="url(#glow)"/>
+  <rect x="69.12" y="34.56" width="53.760000000000005" height="92.16" rx="7.68" fill="none" stroke="#00f0ff" stroke-width="3.84" filter="url(#neon)"/>
+  <rect x="74.88000000000001" y="43.2" width="42.24000000000001" height="74.88" rx="4.608" fill="rgba(0,240,255,0.08)"/>
+  <text x="96" y="84.48" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="28.799999999999997" fill="#00f0ff" filter="url(#neon)">CM</text>
+  <text x="96" y="142.07999999999998" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="12.48" fill="rgba(255,255,255,0.8)">CORNER</text>
+  <text x="96" y="157.44" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="12.48" fill="rgba(255,255,255,0.8)">MOBILE</text>
+</svg>
