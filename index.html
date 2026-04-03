@@ -275,47 +275,71 @@
     -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
   .insta-stat-label { font-size:13px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; margin-top:2px; font-weight:500; }
-  .insta-posts { display:flex; gap:20px; justify-content:center; align-items:center; }
-  .insta-post-frame {
-    width:280px; height:320px; border-radius:20px; overflow:hidden; position:relative;
-    background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
-    opacity:0; transform:translateY(30px) scale(.95);
-    transition: all .8s cubic-bezier(.25,.46,.45,.94);
+  .insta-hero {
+    display:flex; align-items:center; justify-content:center; gap:60px; margin-top:40px;
   }
-  .insta-post-frame.on { opacity:1; transform:translateY(0) scale(1); }
-  .insta-post-frame iframe {
-    width:100%; height:100%; border:none; transform:scale(1); transform-origin:top center;
+  .insta-qr-main {
+    display:flex; flex-direction:column; align-items:center; gap:14px;
   }
-  .insta-post-overlay {
-    position:absolute; bottom:0; left:0; right:0; height:60px;
-    background:linear-gradient(0deg,rgba(0,0,0,.8),transparent); pointer-events:none;
-    display:flex; align-items:flex-end; justify-content:center; padding-bottom:12px;
-  }
-  .insta-post-meta { font-size:12px; color:var(--dim); letter-spacing:1px; }
-  .insta-cta {
-    margin-top:36px; font-size:16px; color:var(--muted); font-weight:400;
-    display:flex; align-items:center; justify-content:center; gap:30px;
-  }
-  .insta-cta strong { color:var(--white); font-weight:600; }
-  .insta-qr-wrap {
-    display:flex; flex-direction:column; align-items:center; gap:10px;
-  }
-  .insta-qr-box {
-    width:130px; height:130px; padding:10px; border-radius:20px;
+  .insta-qr-card {
+    width:200px; height:200px; padding:16px; border-radius:28px;
     background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);
-    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px);
     display:flex; align-items:center; justify-content:center;
     position:relative; overflow:hidden;
   }
-  .insta-qr-box::before {
-    content:''; position:absolute; inset:-2px; border-radius:22px;
+  .insta-qr-card::before {
+    content:''; position:absolute; inset:-2px; border-radius:30px;
     background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-    z-index:-1; opacity:.4;
+    z-index:-1; opacity:.5;
   }
-  .insta-qr-box canvas { border-radius:8px; }
-  .insta-qr-label {
-    font-size:12px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; font-weight:500;
+  .insta-qr-card canvas { border-radius:12px; }
+  .insta-qr-scan-label {
+    font-size:13px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; font-weight:500;
   }
+  .insta-info-side {
+    text-align:left;
+  }
+  .insta-info-side .insta-follow-text {
+    font-size:36px; font-weight:700; color:var(--white); letter-spacing:-1px; line-height:1.2;
+  }
+  .insta-info-side .insta-follow-sub {
+    font-size:18px; color:var(--muted); margin-top:4px; font-weight:300;
+  }
+  .insta-info-side .insta-follow-handle {
+    margin-top:14px; font-size:22px; font-weight:700;
+    background:linear-gradient(90deg,#f09433,#dc2743,#bc1888);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+
+  /* ── Persistent QR (bottom-right, all scenes) ── */
+  .global-qr {
+    position:fixed; bottom:24px; right:28px; z-index:40;
+    display:flex; align-items:center; gap:12px;
+    opacity:0; transform:translateY(10px);
+    transition: all 1s cubic-bezier(.25,.46,.45,.94);
+  }
+  .global-qr.on { opacity:1; transform:translateY(0); }
+  .global-qr-box {
+    width:70px; height:70px; padding:6px; border-radius:14px;
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1);
+    backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+  }
+  .global-qr-box::before {
+    content:''; position:absolute; inset:-1px; border-radius:15px;
+    background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);
+    z-index:-1; opacity:.35;
+  }
+  .global-qr-box canvas { border-radius:6px; }
+  .global-qr-text { text-align:right; }
+  .global-qr-handle {
+    font-size:11px; font-weight:600; letter-spacing:1px;
+    background:linear-gradient(90deg,#f09433,#dc2743);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .global-qr-label { font-size:10px; color:var(--muted); letter-spacing:1px; margin-top:1px; }
 
   /* ════════════════ STATS / SOCIAL PROOF ════════════════ */
   .stats-layout { text-align:center; }
@@ -435,16 +459,15 @@
         <div class="insta-stat-label">Publications</div>
       </div>
     </div>
-    <div class="insta-posts" id="instaPosts"></div>
-    <div class="insta-cta reveal" data-d="800">
-      <div class="insta-qr-wrap">
-        <div class="insta-qr-box"><canvas id="qrCanvas"></canvas></div>
-        <div class="insta-qr-label">Scannez pour suivre</div>
+    <div class="insta-hero reveal" data-d="400">
+      <div class="insta-qr-main">
+        <div class="insta-qr-card"><canvas id="qrCanvas"></canvas></div>
+        <div class="insta-qr-scan-label">Scannez pour suivre</div>
       </div>
-      <div style="text-align:left">
-        <div style="font-size:22px;font-weight:600;color:var(--white);margin-bottom:4px">Suivez-nous</div>
-        <div style="font-size:15px;color:var(--muted)">sur Instagram</div>
-        <div style="margin-top:8px"><strong style="font-size:18px;background:linear-gradient(90deg,#f09433,#dc2743,#bc1888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">@corner.mobile2.ma</strong></div>
+      <div class="insta-info-side">
+        <div class="insta-follow-text">Suivez-nous<br>sur Instagram.</div>
+        <div class="insta-follow-sub">Nouveaut&eacute;s, offres, coulisses.</div>
+        <div class="insta-follow-handle">@corner.mobile2.ma</div>
       </div>
     </div>
   </div>
@@ -477,6 +500,15 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- ═══ GLOBAL QR (visible on all scenes) ═══ -->
+<div class="global-qr" id="globalQr">
+  <div class="global-qr-text">
+    <div class="global-qr-handle">@corner.mobile2.ma</div>
+    <div class="global-qr-label">Suivez-nous</div>
+  </div>
+  <div class="global-qr-box"><canvas id="qrGlobal"></canvas></div>
 </div>
 
 <!-- ═══ BOTTOM PILL ═══ -->
@@ -614,10 +646,13 @@ function generateQR(canvas, url, size) {
   img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&margin=2&format=png`;
 }
 
-// Generate Instagram QR
+// Generate QR codes — hero (Instagram scene) + global (all scenes)
+const INSTA_URL = 'https://www.instagram.com/corner.mobile2.ma/';
 setTimeout(() => {
-  const qrEl = $('qrCanvas');
-  if (qrEl) generateQR(qrEl, 'https://www.instagram.com/corner.mobile2.ma/', 110);
+  const qrHero = $('qrCanvas');
+  const qrGlobal = $('qrGlobal');
+  if (qrHero) generateQR(qrHero, INSTA_URL, 168);
+  if (qrGlobal) generateQR(qrGlobal, INSTA_URL, 58);
 }, 500);
 
 // ═══════════════════════════════════════════
@@ -627,9 +662,9 @@ const REFRESH_INTERVAL = 4 * 60 * 60 * 1000; // 4 hours
 setTimeout(() => location.reload(), REFRESH_INTERVAL);
 
 // ═══════════════════════════════════════════
-// INSTAGRAM — Load from posts.json
+// INSTAGRAM — Load stats from posts.json
 // ═══════════════════════════════════════════
-let instaData = { followers: 804, posts_count: 108, featured_posts: ['DWmg_C7DG7e'] };
+let instaData = { followers: 804, posts_count: 108 };
 
 async function loadInstagram() {
   try {
@@ -637,30 +672,17 @@ async function loadInstagram() {
     if (res.ok) instaData = await res.json();
   } catch(e) {}
 
-  // Update stats display
+  // Update Instagram scene stats
   document.querySelectorAll('#s6 [data-count]').forEach(el => {
     const label = el.closest('.insta-stat')?.querySelector('.insta-stat-label')?.textContent;
     if (label && label.includes('Follower')) el.setAttribute('data-count', instaData.followers);
     if (label && label.includes('Publication')) el.setAttribute('data-count', instaData.posts_count);
   });
 
-  // Update stats scene too
+  // Update stats scene
   document.querySelectorAll('#s7 [data-count]').forEach(el => {
     const label = el.closest('.stat-card')?.querySelector('.stat-label')?.textContent;
     if (label && label.includes('Instagram')) el.setAttribute('data-count', instaData.posts_count);
-  });
-
-  buildInstaPosts(instaData.featured_posts);
-}
-
-function buildInstaPosts(posts) {
-  const c = $('instaPosts'); c.innerHTML = '';
-  posts.forEach((code, i) => {
-    const frame = document.createElement('div');
-    frame.className = 'insta-post-frame';
-    frame.setAttribute('data-d', 400 + i * 200);
-    frame.innerHTML = `<iframe src="https://www.instagram.com/p/${code}/embed/" loading="lazy" scrolling="no"></iframe>`;
-    c.appendChild(frame);
   });
 }
 
@@ -737,6 +759,7 @@ setTimeout(()=>{
   $('intro').classList.add('done');
   setTimeout(()=>{
     $('pill').classList.add('on');
+    $('globalQr').classList.add('on');
     showMsg(); setInterval(showMsg, 3500);
     goScene(); setInterval(goScene, 10000);
   }, 800);
