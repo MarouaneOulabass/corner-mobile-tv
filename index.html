@@ -123,9 +123,9 @@
   }
   .phone-img-wrap img {
     max-width:100%; max-height:100%; object-fit:contain;
-    border-radius:16px;
-    mix-blend-mode:lighten;
   }
+  .phone-img-wrap img.dark-bg { border-radius:16px; }
+  .phone-img-wrap img.light-bg { mix-blend-mode:lighten; }
   .phone-img-glow {
     position:absolute; inset:-20px; border-radius:50%;
     background:radial-gradient(circle, rgba(41,151,255,.08) 0%, transparent 70%);
@@ -564,28 +564,32 @@ drawOrbs();
 // ═══════════════════════════════════════════
 const phones=[
   {
-    brand:'Samsung',
-    model:'Galaxy S25 Ultra',
-    img:'https://fdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-s25-ultra-sm-s938-1.jpg',
-    glow:'#2997ff'
+    brand:'Apple',
+    model:'iPhone 17 Pro',
+    img:'https://www.apple.com/v/iphone-17-pro/a/images/overview/product-viewer/initial__fo4stdzx5uy6_large_2x.jpg',
+    glow:'#bf5af2',
+    bgClass:'dark-bg'
   },
   {
-    brand:'Apple',
-    model:'iPhone 16 Pro Max',
-    img:'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-16-pro-finish-select-202409-6-9inch-blacktitanium?wid=940&hei=1112&fmt=png-alpha',
-    glow:'#bf5af2'
+    brand:'Samsung',
+    model:'Galaxy S25 Ultra',
+    img:'https://images.samsung.com/is/image/samsung/assets/uk/2501/smartphones/galaxy-s25/compare-table/s25ultra_titanium-silverblue.png',
+    glow:'#2997ff',
+    bgClass:'light-bg'
   },
   {
     brand:'Xiaomi',
     model:'15 Ultra',
     img:'https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-15-ultra-5.jpg',
-    glow:'#ff9f0a'
+    glow:'#ff9f0a',
+    bgClass:'light-bg'
   },
   {
     brand:'Samsung',
     model:'Galaxy A56',
-    img:'https://fdn2.gsmarena.com/vv/pics/samsung/samsung-galaxy-a56-1.jpg',
-    glow:'#30d158'
+    img:'https://api.samsungmobilepress.com/api/v1/file/B9C14E432C1BF897D582FE817FC9367183CF59051B1BA191E37F356972A83FA5F2E483CAEE6B522BA5182EC2A5DEC534E5BBB11DB1CFE09ABEB42DA7DFE9582C02A952AB0C191CC44037C4AA4D5AECDF279EADD2DA9D3D510ACB58B642DEB837223F9ADA59715AED09DE235FD3D9B16D6BB2C77DFB4581F10703541C70F89707D1FA27591BC5FF5B0FE44D07BEF05D1F',
+    glow:'#30d158',
+    bgClass:'light-bg'
   },
 ];
 
@@ -598,7 +602,7 @@ function buildPhones(){
     d.innerHTML=`
       <div class="phone-img-wrap" style="animation-delay:${i*.8}s">
         <div class="phone-img-glow" style="background:radial-gradient(circle,${p.glow}15 0%,transparent 70%)"></div>
-        <img src="${p.img}" alt="${p.brand} ${p.model}" loading="lazy">
+        <img src="${p.img}" alt="${p.brand} ${p.model}" class="${p.bgClass}" loading="lazy">
       </div>
       <div class="phone-label">
         <div class="phone-label-brand">${p.brand}</div>
