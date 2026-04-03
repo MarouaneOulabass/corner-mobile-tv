@@ -547,25 +547,50 @@ function showMsg(){
 }
 
 // ═══════════════════════════════════════════
-// INSTAGRAM POSTS — Add your best post URLs here!
+// AUTO-REFRESH — Reload page every 4 hours
 // ═══════════════════════════════════════════
-const instaPosts=[
-  'DWmg_C7DG7e',
-  // Add more post shortcodes below (the part after /p/ in the URL):
-  // 'XXXXXXXXXX',
-];
+const REFRESH_INTERVAL = 4 * 60 * 60 * 1000; // 4 hours
+setTimeout(() => location.reload(), REFRESH_INTERVAL);
 
-function buildInstaPosts(){
-  const c=$('instaPosts'); c.innerHTML='';
-  instaPosts.forEach((code,i)=>{
-    const frame=document.createElement('div');
-    frame.className='insta-post-frame';
-    frame.setAttribute('data-d', 400+i*200);
-    frame.innerHTML=`<iframe src="https://www.instagram.com/p/${code}/embed" loading="lazy" scrolling="no"></iframe>`;
+// ═══════════════════════════════════════════
+// INSTAGRAM — Load from posts.json
+// ═══════════════════════════════════════════
+let instaData = { followers: 804, posts_count: 108, featured_posts: ['DWmg_C7DG7e'] };
+
+async function loadInstagram() {
+  try {
+    const res = await fetch('posts.json?t=' + Date.now());
+    if (res.ok) instaData = await res.json();
+  } catch(e) {}
+
+  // Update stats display
+  document.querySelectorAll('#s6 [data-count]').forEach(el => {
+    const label = el.closest('.insta-stat')?.querySelector('.insta-stat-label')?.textContent;
+    if (label && label.includes('Follower')) el.setAttribute('data-count', instaData.followers);
+    if (label && label.includes('Publication')) el.setAttribute('data-count', instaData.posts_count);
+  });
+
+  // Update stats scene too
+  document.querySelectorAll('#s7 [data-count]').forEach(el => {
+    const label = el.closest('.stat-card')?.querySelector('.stat-label')?.textContent;
+    if (label && label.includes('Instagram')) el.setAttribute('data-count', instaData.posts_count);
+  });
+
+  buildInstaPosts(instaData.featured_posts);
+}
+
+function buildInstaPosts(posts) {
+  const c = $('instaPosts'); c.innerHTML = '';
+  posts.forEach((code, i) => {
+    const frame = document.createElement('div');
+    frame.className = 'insta-post-frame';
+    frame.setAttribute('data-d', 400 + i * 200);
+    frame.innerHTML = `<iframe src="https://www.instagram.com/p/${code}/embed/" loading="lazy" scrolling="no"></iframe>`;
     c.appendChild(frame);
   });
 }
-buildInstaPosts();
+
+loadInstagram();
 
 // ═══════════════════════════════════════════
 // ANIMATED COUNTERS
