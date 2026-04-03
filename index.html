@@ -294,8 +294,28 @@
   .insta-post-meta { font-size:12px; color:var(--dim); letter-spacing:1px; }
   .insta-cta {
     margin-top:36px; font-size:16px; color:var(--muted); font-weight:400;
+    display:flex; align-items:center; justify-content:center; gap:30px;
   }
   .insta-cta strong { color:var(--white); font-weight:600; }
+  .insta-qr-wrap {
+    display:flex; flex-direction:column; align-items:center; gap:10px;
+  }
+  .insta-qr-box {
+    width:130px; height:130px; padding:10px; border-radius:20px;
+    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08);
+    backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    display:flex; align-items:center; justify-content:center;
+    position:relative; overflow:hidden;
+  }
+  .insta-qr-box::before {
+    content:''; position:absolute; inset:-2px; border-radius:22px;
+    background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+    z-index:-1; opacity:.4;
+  }
+  .insta-qr-box canvas { border-radius:8px; }
+  .insta-qr-label {
+    font-size:12px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; font-weight:500;
+  }
 
   /* ════════════════ STATS / SOCIAL PROOF ════════════════ */
   .stats-layout { text-align:center; }
@@ -416,7 +436,17 @@
       </div>
     </div>
     <div class="insta-posts" id="instaPosts"></div>
-    <div class="insta-cta reveal" data-d="800">Suivez-nous sur Instagram &mdash; <strong>@corner.mobile2.ma</strong></div>
+    <div class="insta-cta reveal" data-d="800">
+      <div class="insta-qr-wrap">
+        <div class="insta-qr-box"><canvas id="qrCanvas"></canvas></div>
+        <div class="insta-qr-label">Scannez pour suivre</div>
+      </div>
+      <div style="text-align:left">
+        <div style="font-size:22px;font-weight:600;color:var(--white);margin-bottom:4px">Suivez-nous</div>
+        <div style="font-size:15px;color:var(--muted)">sur Instagram</div>
+        <div style="margin-top:8px"><strong style="font-size:18px;background:linear-gradient(90deg,#f09433,#dc2743,#bc1888);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">@corner.mobile2.ma</strong></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -545,6 +575,50 @@ function showMsg(){
   requestAnimationFrame(()=>requestAnimationFrame(()=>curW.classList.add('on')));
   mi=(mi+1)%msgs.length;
 }
+
+// ═══════════════════════════════════════════
+// QR CODE GENERATOR (minimal, pure JS)
+// ═══════════════════════════════════════════
+function generateQR(canvas, url, size) {
+  // Use a QR code image from a free API, rendered to canvas
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function() {
+    canvas.width = size;
+    canvas.height = size;
+    const c = canvas.getContext('2d');
+    // Black rounded rect background
+    c.fillStyle = '#ffffff';
+    c.beginPath();
+    c.roundRect(0, 0, size, size, 8);
+    c.fill();
+    c.drawImage(img, 4, 4, size - 8, size - 8);
+  };
+  img.onerror = function() {
+    // Fallback: draw a simple @ icon
+    canvas.width = size;
+    canvas.height = size;
+    const c = canvas.getContext('2d');
+    c.fillStyle = '#ffffff';
+    c.beginPath();
+    c.roundRect(0, 0, size, size, 8);
+    c.fill();
+    c.fillStyle = '#000';
+    c.font = `bold ${size * 0.3}px Inter, sans-serif`;
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText('QR', size / 2, size / 2 - 10);
+    c.font = `${size * 0.12}px Inter, sans-serif`;
+    c.fillText('Scannez', size / 2, size / 2 + 16);
+  };
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&margin=2&format=png`;
+}
+
+// Generate Instagram QR
+setTimeout(() => {
+  const qrEl = $('qrCanvas');
+  if (qrEl) generateQR(qrEl, 'https://www.instagram.com/corner.mobile2.ma/', 110);
+}, 500);
 
 // ═══════════════════════════════════════════
 // AUTO-REFRESH — Reload page every 4 hours
