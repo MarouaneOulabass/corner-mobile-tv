@@ -112,48 +112,68 @@
   .hw-fr { color:var(--white); }
   .hw-da { font-family:'Cairo',sans-serif; font-size:44px; direction:rtl; color:var(--dim); }
 
-  /* ════════════════ PHONE SHOWCASE ════════════════ */
-  .phone-hero { position:relative; display:flex; align-items:flex-start; justify-content:center; gap:70px; padding-bottom:20px; }
-  .phone-card { text-align:center; }
-  .phone-img-wrap {
-    width:160px; height:280px; position:relative; margin:0 auto;
+  /* ════════════════ PHONE CAROUSEL (1 per slide, fullscreen hero) ════════════════ */
+  .phone-carousel {
+    position:absolute; inset:0; width:100%; height:100%;
+  }
+  .phone-slide {
+    position:absolute; inset:0; width:100%; height:100%;
     display:flex; align-items:center; justify-content:center;
-    filter:drop-shadow(0 20px 40px rgba(0,0,0,.5));
-    animation:phoneHover 5s ease-in-out infinite;
+    opacity:0; transform:scale(1.04);
+    transition: opacity 1.2s cubic-bezier(.4,0,.2,1), transform 1.2s cubic-bezier(.4,0,.2,1);
   }
-  .phone-img-wrap img {
-    max-width:100%; max-height:100%; object-fit:contain;
+  .phone-slide.active { opacity:1; transform:scale(1); }
+  .phone-slide.leaving { opacity:0; transform:scale(.96); }
+
+  .phone-slide-bg {
+    position:absolute; inset:0; width:100%; height:100%;
+    background-size:cover; background-position:center;
+    z-index:0;
   }
-  .phone-img-wrap img.dark-bg { border-radius:16px; }
-  .phone-img-wrap img.light-bg { mix-blend-mode:lighten; }
-  .phone-img-glow {
-    position:absolute; inset:-20px; border-radius:50%;
-    background:radial-gradient(circle, rgba(41,151,255,.08) 0%, transparent 70%);
-    z-index:-1;
-  }
-  @keyframes phoneHover {
-    0%,100% { transform:translateY(0); }
-    50% { transform:translateY(-14px); }
-  }
-  .phone-label {
-    text-align:center; margin-top:18px;
-  }
-  .phone-label-brand { font-size:12px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); font-weight:500; }
-  .phone-label-model { font-size:16px; font-weight:600; color:var(--white); margin-top:3px; }
-  .phone-label-tag {
-    display:inline-block; margin-top:8px; padding:3px 12px; border-radius:20px; font-size:10px;
-    font-weight:600; letter-spacing:2px; text-transform:uppercase;
-    background:rgba(48,209,88,.12); color:var(--accent3); border:1px solid rgba(48,209,88,.2);
+  .phone-slide-bg::after {
+    content:''; position:absolute; inset:0;
+    background:rgba(0,0,0,.35);
   }
 
-  .phone-section-title {
-    font-size:52px; font-weight:700; letter-spacing:-1px; text-align:center;
-    background:linear-gradient(180deg,var(--white),rgba(245,245,247,.5));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  .phone-slide-img {
+    position:relative; z-index:2;
+    max-height:65vh; max-width:45vw; object-fit:contain;
+    filter:drop-shadow(0 30px 60px rgba(0,0,0,.6));
+    animation:phoneFloat 6s ease-in-out infinite;
   }
-  .phone-section-sub {
-    text-align:center; font-size:18px; color:var(--muted); margin-top:8px; font-weight:300;
+  @keyframes phoneFloat {
+    0%,100% { transform:translateY(0); }
+    50% { transform:translateY(-16px); }
   }
+
+  .phone-slide-info {
+    position:absolute; bottom:100px; left:50%; transform:translateX(-50%);
+    text-align:center; z-index:3;
+  }
+  .phone-slide-brand {
+    font-size:13px; letter-spacing:6px; text-transform:uppercase;
+    color:var(--dim); font-weight:500;
+  }
+  .phone-slide-model {
+    font-size:42px; font-weight:700; letter-spacing:-1px; color:var(--white);
+    margin-top:4px;
+  }
+  .phone-slide-tag {
+    display:inline-block; margin-top:12px; padding:5px 18px; border-radius:24px;
+    font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
+    background:rgba(48,209,88,.12); color:var(--accent3); border:1px solid rgba(48,209,88,.25);
+  }
+
+  /* Carousel dots */
+  .phone-dots {
+    position:absolute; bottom:70px; left:50%; transform:translateX(-50%);
+    display:flex; gap:8px; z-index:3;
+  }
+  .phone-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:rgba(255,255,255,.2); transition:all .4s ease;
+  }
+  .phone-dot.active { background:var(--white); transform:scale(1.2); }
 
   /* ════════════════ REPAIR ════════════════ */
   .repair-hero-text {
@@ -389,11 +409,10 @@
   <div class="hero-welcome" id="welcomeArea"></div>
 </div>
 
-<!-- ═══ SCENE 2: PHONES ═══ -->
+<!-- ═══ SCENE 2: PHONE CAROUSEL ═══ -->
 <div class="scene" id="s2">
-  <div class="phone-section-title reveal" data-d="0">Les derniers mod&egrave;les.</div>
-  <div class="phone-section-sub reveal" data-d="150">Toujours en stock. Toujours au meilleur prix.</div>
-  <div class="phone-hero" style="margin-top:30px" id="phoneHero"></div>
+  <div class="phone-carousel" id="phoneCarousel"></div>
+  <div class="phone-dots" id="phoneDots"></div>
 </div>
 
 <!-- ═══ SCENE 3: REPAIR ═══ -->
@@ -560,59 +579,94 @@ function drawOrbs(){
 drawOrbs();
 
 // ═══════════════════════════════════════════
-// PHONE BUILDER — Real official images
+// PHONE CAROUSEL — One hero per slide
 // ═══════════════════════════════════════════
 const phones=[
   {
     brand:'Apple',
     model:'iPhone 17 Pro',
     img:'https://www.apple.com/v/iphone-17-pro/a/images/overview/product-viewer/initial__fo4stdzx5uy6_large_2x.jpg',
-    glow:'#bf5af2',
-    bgClass:'dark-bg'
+    bg:'linear-gradient(135deg,#1a0a00,#2d1500,#0a0a0a)',
   },
   {
     brand:'Samsung',
     model:'Galaxy S25 Ultra',
     img:'https://images.samsung.com/is/image/samsung/assets/uk/2501/smartphones/galaxy-s25/compare-table/s25ultra_titanium-silverblue.png',
-    glow:'#2997ff',
-    bgClass:'light-bg'
+    bg:'linear-gradient(135deg,#060818,#0c1a2e,#050510)',
+    blend:'lighten',
   },
   {
     brand:'Xiaomi',
     model:'15 Ultra',
     img:'https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-15-ultra-5.jpg',
-    glow:'#ff9f0a',
-    bgClass:'light-bg'
+    bg:'linear-gradient(135deg,#1a0800,#1e1000,#0a0a0a)',
+    blend:'lighten',
   },
   {
     brand:'Samsung',
     model:'Galaxy A56',
     img:'https://api.samsungmobilepress.com/api/v1/file/B9C14E432C1BF897D582FE817FC9367183CF59051B1BA191E37F356972A83FA5F2E483CAEE6B522BA5182EC2A5DEC534E5BBB11DB1CFE09ABEB42DA7DFE9582C02A952AB0C191CC44037C4AA4D5AECDF279EADD2DA9D3D510ACB58B642DEB837223F9ADA59715AED09DE235FD3D9B16D6BB2C77DFB4581F10703541C70F89707D1FA27591BC5FF5B0FE44D07BEF05D1F',
-    glow:'#30d158',
-    bgClass:'light-bg'
+    bg:'linear-gradient(135deg,#0a1a0a,#081810,#050510)',
+    blend:'lighten',
   },
 ];
 
-function buildPhones(){
-  const h=$('phoneHero'); h.innerHTML='';
-  phones.forEach((p,i)=>{
-    const d=document.createElement('div');
-    d.className='phone-card reveal-scale';
-    d.setAttribute('data-d', 200+i*180);
-    d.innerHTML=`
-      <div class="phone-img-wrap" style="animation-delay:${i*.8}s">
-        <div class="phone-img-glow" style="background:radial-gradient(circle,${p.glow}15 0%,transparent 70%)"></div>
-        <img src="${p.img}" alt="${p.brand} ${p.model}" class="${p.bgClass}" loading="lazy">
-      </div>
-      <div class="phone-label">
-        <div class="phone-label-brand">${p.brand}</div>
-        <div class="phone-label-model">${p.model}</div>
-        <div class="phone-label-tag">En stock</div>
+let phoneIdx = 0;
+let phoneTimer = null;
+
+function buildPhoneCarousel() {
+  const wrap = $('phoneCarousel');
+  const dots = $('phoneDots');
+  wrap.innerHTML = ''; dots.innerHTML = '';
+
+  phones.forEach((p, i) => {
+    // Slide
+    const slide = document.createElement('div');
+    slide.className = 'phone-slide';
+    slide.id = 'pslide' + i;
+    slide.innerHTML = `
+      <div class="phone-slide-bg" style="background:${p.bg}"></div>
+      <img class="phone-slide-img" src="${p.img}" alt="${p.brand} ${p.model}" style="${p.blend ? 'mix-blend-mode:'+p.blend : ''}" loading="lazy">
+      <div class="phone-slide-info">
+        <div class="phone-slide-brand">${p.brand}</div>
+        <div class="phone-slide-model">${p.model}</div>
+        <div class="phone-slide-tag">Disponible en magasin</div>
       </div>`;
-    h.appendChild(d);
+    wrap.appendChild(slide);
+
+    // Dot
+    const dot = document.createElement('div');
+    dot.className = 'phone-dot';
+    dot.id = 'pdot' + i;
+    dots.appendChild(dot);
   });
 }
-buildPhones();
+
+function showPhoneSlide(idx) {
+  phones.forEach((_, i) => {
+    const slide = $('pslide' + i);
+    const dot = $('pdot' + i);
+    if (i === idx) {
+      slide.classList.remove('leaving');
+      slide.classList.add('active');
+      dot.classList.add('active');
+    } else {
+      if (slide.classList.contains('active')) {
+        slide.classList.add('leaving');
+        slide.classList.remove('active');
+        setTimeout(() => slide.classList.remove('leaving'), 1200);
+      }
+      dot.classList.remove('active');
+    }
+  });
+}
+
+function nextPhoneSlide() {
+  phoneIdx = (phoneIdx + 1) % phones.length;
+  showPhoneSlide(phoneIdx);
+}
+
+buildPhoneCarousel();
 
 // ═══════════════════════════════════════════
 // WELCOME CAROUSEL
@@ -763,31 +817,55 @@ function resetElements(sceneEl){
   sceneEl.querySelectorAll('.repair-chip,.acc-card,.info-card,.insta-post-frame,.stat-card').forEach(el=>el.classList.remove('on'));
 }
 
-function goScene(){
-  // Leave current
-  if(si>=0){
-    const prev=$(sceneIds[si]);
-    prev.classList.add('leaving');
-    prev.classList.remove('active');
-    setTimeout(()=>{ prev.classList.remove('leaving'); resetElements(prev); },1500);
-  }
+// Scene durations: s2 (phone carousel) gets longer to show all phones
+const sceneDurations = { s2: phones.length * 4000 + 2000 }; // 4s per phone + buffer
+const defaultDuration = 10000;
+let sceneTimeout = null;
 
-  si=(si+1)%sceneIds.length;
-  const next=$(sceneIds[si]);
+function leaveScene(id) {
+  const prev = $(id);
+  prev.classList.add('leaving');
+  prev.classList.remove('active');
+  setTimeout(() => { prev.classList.remove('leaving'); resetElements(prev); }, 1500);
+
+  // Stop phone carousel if leaving s2
+  if (id === 's2' && phoneTimer) { clearInterval(phoneTimer); phoneTimer = null; }
+}
+
+function enterScene(id) {
+  const next = $(id);
   next.classList.add('active');
-  setTimeout(()=>revealElements(next), 200);
+  setTimeout(() => revealElements(next), 200);
+
+  // Start phone carousel if entering s2
+  if (id === 's2') {
+    phoneIdx = 0;
+    showPhoneSlide(0);
+    phoneTimer = setInterval(nextPhoneSlide, 4000);
+  }
+}
+
+function goScene() {
+  if (si >= 0) leaveScene(sceneIds[si]);
+  si = (si + 1) % sceneIds.length;
+  enterScene(sceneIds[si]);
+
+  // Schedule next scene with variable duration
+  const dur = sceneDurations[sceneIds[si]] || defaultDuration;
+  if (sceneTimeout) clearTimeout(sceneTimeout);
+  sceneTimeout = setTimeout(goScene, dur);
 }
 
 // ═══════════════════════════════════════════
 // INTRO → START
 // ═══════════════════════════════════════════
-setTimeout(()=>{
+setTimeout(() => {
   $('intro').classList.add('done');
-  setTimeout(()=>{
+  setTimeout(() => {
     $('pill').classList.add('on');
     $('globalQr').classList.add('on');
     showMsg(); setInterval(showMsg, 3500);
-    goScene(); setInterval(goScene, 10000);
+    goScene();
   }, 800);
 }, 3000);
 
