@@ -37,6 +37,7 @@
   }
   .scene.active { opacity:1; transform:scale(1); }
   .scene.leaving { opacity:0; transform:scale(.98); }
+  .scene { padding-bottom:70px; }
 
   /* ── Reveal animations ── */
   .reveal {
@@ -112,47 +113,45 @@
   .hw-da { font-family:'Cairo',sans-serif; font-size:44px; direction:rtl; color:var(--dim); }
 
   /* ════════════════ PHONE SHOWCASE ════════════════ */
-  .phone-hero { position:relative; display:flex; align-items:center; justify-content:center; gap:100px; }
-  .phone-device {
-    width:180px; height:360px; border-radius:36px; position:relative;
-    background:linear-gradient(145deg, #1c1c1e, #0a0a0a);
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 .5px rgba(255,255,255,.05) inset;
-    overflow:hidden;
+  .phone-hero { position:relative; display:flex; align-items:flex-start; justify-content:center; gap:70px; padding-bottom:20px; }
+  .phone-card { text-align:center; }
+  .phone-img-wrap {
+    width:160px; height:280px; position:relative; margin:0 auto;
+    display:flex; align-items:center; justify-content:center;
+    filter:drop-shadow(0 20px 40px rgba(0,0,0,.5));
+    animation:phoneHover 5s ease-in-out infinite;
   }
-  .phone-device::before {
-    content:''; position:absolute; top:0; left:0; right:0; height:50%;
-    background:linear-gradient(180deg, rgba(255,255,255,.06), transparent);
-    border-radius:36px 36px 0 0; pointer-events:none;
+  .phone-img-wrap img {
+    max-width:100%; max-height:100%; object-fit:contain;
+    border-radius:12px;
   }
-  .phone-screen {
-    position:absolute; top:12px; left:8px; right:8px; bottom:12px;
-    border-radius:28px; overflow:hidden;
-    background:linear-gradient(135deg, #1a1a2e, #16213e);
+  .phone-img-glow {
+    position:absolute; inset:-20px; border-radius:50%;
+    background:radial-gradient(circle, rgba(41,151,255,.08) 0%, transparent 70%);
+    z-index:-1;
   }
-  .phone-screen-grad {
-    width:100%; height:100%;
-    background:conic-gradient(from 180deg at 50% 50%, #2997ff33, #bf5af233, #ff375f33, #2997ff33);
-    animation:screenGrad 6s linear infinite;
-  }
-  @keyframes screenGrad { to { transform:rotate(360deg); } }
-  .phone-notch {
-    position:absolute; top:12px; left:50%; transform:translateX(-50%);
-    width:80px; height:22px; background:#000; border-radius:0 0 14px 14px; z-index:2;
+  @keyframes phoneHover {
+    0%,100% { transform:translateY(0); }
+    50% { transform:translateY(-14px); }
   }
   .phone-label {
-    text-align:center; margin-top:24px;
+    text-align:center; margin-top:18px;
   }
-  .phone-label-brand { font-size:13px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); font-weight:500; }
-  .phone-label-model { font-size:18px; font-weight:600; color:var(--white); margin-top:4px; }
+  .phone-label-brand { font-size:12px; letter-spacing:4px; text-transform:uppercase; color:var(--muted); font-weight:500; }
+  .phone-label-model { font-size:16px; font-weight:600; color:var(--white); margin-top:3px; }
+  .phone-label-tag {
+    display:inline-block; margin-top:8px; padding:3px 12px; border-radius:20px; font-size:10px;
+    font-weight:600; letter-spacing:2px; text-transform:uppercase;
+    background:rgba(48,209,88,.12); color:var(--accent3); border:1px solid rgba(48,209,88,.2);
+  }
 
   .phone-section-title {
-    font-size:56px; font-weight:700; letter-spacing:-1px; text-align:center;
+    font-size:52px; font-weight:700; letter-spacing:-1px; text-align:center;
     background:linear-gradient(180deg,var(--white),rgba(245,245,247,.5));
     -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
   .phone-section-sub {
-    text-align:center; font-size:20px; color:var(--muted); margin-top:10px; font-weight:300;
+    text-align:center; font-size:18px; color:var(--muted); margin-top:8px; font-weight:300;
   }
 
   /* ════════════════ REPAIR ════════════════ */
@@ -393,7 +392,7 @@
 <div class="scene" id="s2">
   <div class="phone-section-title reveal" data-d="0">Les derniers mod&egrave;les.</div>
   <div class="phone-section-sub reveal" data-d="150">Toujours en stock. Toujours au meilleur prix.</div>
-  <div class="phone-hero" style="margin-top:50px" id="phoneHero"></div>
+  <div class="phone-hero" style="margin-top:30px" id="phoneHero"></div>
 </div>
 
 <!-- ═══ SCENE 3: REPAIR ═══ -->
@@ -560,28 +559,50 @@ function drawOrbs(){
 drawOrbs();
 
 // ═══════════════════════════════════════════
-// PHONE BUILDER
+// PHONE BUILDER — Real official images
 // ═══════════════════════════════════════════
 const phones=[
-  {brand:'Samsung',model:'Galaxy S25 Ultra'},
-  {brand:'Apple',model:'iPhone 16 Pro Max'},
-  {brand:'Xiaomi',model:'15 Ultra'},
+  {
+    brand:'Samsung',
+    model:'Galaxy S25 Ultra',
+    img:'https://images.samsung.com/is/image/samsung/p6pim/global/galaxy-s25-ultra/gallery/global-galaxy-s25-ultra-s938-titanium-silverblue-front-thumb-702338015',
+    glow:'#2997ff'
+  },
+  {
+    brand:'Apple',
+    model:'iPhone 16 Pro Max',
+    img:'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-16-pro-finish-select-202409-6-3inch-deserttitanium?wid=400&hei=600&fmt=png-alpha',
+    glow:'#bf5af2'
+  },
+  {
+    brand:'Xiaomi',
+    model:'15 Ultra',
+    img:'https://i02.appmifile.com/mi-com-product/fly-mic/xiaomi-15-ultra/M/xiaomi-15-ultra-white-01.png',
+    glow:'#ff9f0a'
+  },
+  {
+    brand:'Samsung',
+    model:'Galaxy A56',
+    img:'https://images.samsung.com/is/image/samsung/p6pim/global/galaxy-a56-5g/gallery/global-galaxy-a56-5g-a566-awesome-iceblue-front-thumb-702338277',
+    glow:'#30d158'
+  },
 ];
 
 function buildPhones(){
   const h=$('phoneHero'); h.innerHTML='';
   phones.forEach((p,i)=>{
     const d=document.createElement('div');
-    d.className='reveal-scale';
-    d.setAttribute('data-d', 300+i*200);
+    d.className='phone-card reveal-scale';
+    d.setAttribute('data-d', 200+i*180);
     d.innerHTML=`
-      <div class="phone-device" style="animation-delay:${i}s">
-        <div class="phone-notch"></div>
-        <div class="phone-screen"><div class="phone-screen-grad"></div></div>
+      <div class="phone-img-wrap" style="animation-delay:${i*.8}s">
+        <div class="phone-img-glow" style="background:radial-gradient(circle,${p.glow}15 0%,transparent 70%)"></div>
+        <img src="${p.img}" alt="${p.brand} ${p.model}" loading="lazy">
       </div>
       <div class="phone-label">
         <div class="phone-label-brand">${p.brand}</div>
         <div class="phone-label-model">${p.model}</div>
+        <div class="phone-label-tag">En stock</div>
       </div>`;
     h.appendChild(d);
   });
