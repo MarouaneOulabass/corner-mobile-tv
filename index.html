@@ -112,68 +112,126 @@
   .hw-fr { color:var(--white); }
   .hw-da { font-family:'Cairo',sans-serif; font-size:44px; direction:rtl; color:var(--dim); }
 
-  /* ════════════════ PHONE CAROUSEL (1 per slide, fullscreen hero) ════════════════ */
+  /* ════════════════ PHONE SHOWCASE — Cinematic Keynote Style ════════════════ */
   .phone-carousel {
     position:absolute; inset:0; width:100%; height:100%;
   }
   .phone-slide {
     position:absolute; inset:0; width:100%; height:100%;
     display:flex; align-items:center; justify-content:center;
-    opacity:0; transform:scale(1.04);
-    transition: opacity 1.2s cubic-bezier(.4,0,.2,1), transform 1.2s cubic-bezier(.4,0,.2,1);
+    opacity:0; transform:scale(1.06);
+    transition: opacity 1.4s cubic-bezier(.4,0,.2,1), transform 1.4s cubic-bezier(.4,0,.2,1);
   }
   .phone-slide.active { opacity:1; transform:scale(1); }
-  .phone-slide.leaving { opacity:0; transform:scale(.96); }
+  .phone-slide.leaving { opacity:0; transform:scale(.94); }
 
   .phone-slide-bg {
     position:absolute; inset:0; width:100%; height:100%;
     background-size:cover; background-position:center;
     z-index:0;
   }
-  .phone-slide-bg::after {
-    content:''; position:absolute; inset:0;
-    background:rgba(0,0,0,.35);
+
+  /* Glow orb behind text */
+  .phone-slide-glow {
+    position:absolute; width:500px; height:500px; border-radius:50%;
+    filter:blur(130px); opacity:0; z-index:1;
+    transition: opacity 2s ease;
+  }
+  .phone-slide.active .phone-slide-glow {
+    opacity:1;
+    animation: glowPulse 4s ease-in-out infinite;
   }
 
-  .phone-slide-img {
-    position:relative; z-index:2;
-    max-height:65vh; max-width:45vw; object-fit:contain;
-    filter:drop-shadow(0 30px 60px rgba(0,0,0,.6));
-    animation:phoneFloat 6s ease-in-out infinite;
+  /* Light streak */
+  .phone-slide-streak {
+    position:absolute; top:50%; left:-100%; width:200%; height:1px;
+    z-index:2; opacity:0;
+    transition: opacity 0.6s ease 0.4s;
   }
-  @keyframes phoneFloat {
-    0%,100% { transform:translateY(0); }
-    50% { transform:translateY(-16px); }
+  .phone-slide.active .phone-slide-streak {
+    opacity:1;
+    animation: streakSweep 3s cubic-bezier(.4,0,.2,1) 0.6s;
   }
 
-  .phone-slide-info {
-    position:absolute; bottom:100px; left:50%; transform:translateX(-50%);
-    text-align:center; z-index:3;
+  /* Content container */
+  .phone-slide-content {
+    position:relative; z-index:3;
+    text-align:center; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
   }
+
+  /* Brand name — small, elegant */
   .phone-slide-brand {
-    font-size:13px; letter-spacing:6px; text-transform:uppercase;
-    color:var(--dim); font-weight:500;
+    font-size:15px; letter-spacing:12px; text-transform:uppercase;
+    font-weight:500; opacity:0;
+    transform:translateY(20px);
+    transition: all 0.9s cubic-bezier(.25,.46,.45,.94) 0.3s;
   }
+  .phone-slide.active .phone-slide-brand {
+    opacity:0.5; transform:translateY(0);
+  }
+
+  /* Model name — MASSIVE, gradient */
   .phone-slide-model {
-    font-size:42px; font-weight:700; letter-spacing:-1px; color:var(--white);
-    margin-top:4px;
+    font-size:110px; font-weight:800; letter-spacing:-4px;
+    line-height:1; margin-top:8px;
+    opacity:0; transform:scale(0.88) translateY(30px);
+    transition: all 1.3s cubic-bezier(.25,.46,.45,.94) 0.5s;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
   }
+  .phone-slide.active .phone-slide-model {
+    opacity:1; transform:scale(1) translateY(0);
+  }
+
+  /* Animated line */
+  .phone-slide-line {
+    width:0; height:2px; margin-top:32px; border-radius:1px;
+    transition: width 1.5s cubic-bezier(.25,.46,.45,.94) 0.9s;
+  }
+  .phone-slide.active .phone-slide-line { width:140px; }
+
+  /* Tagline */
   .phone-slide-tag {
-    display:inline-block; margin-top:12px; padding:5px 18px; border-radius:24px;
-    font-size:11px; font-weight:600; letter-spacing:3px; text-transform:uppercase;
-    background:rgba(48,209,88,.12); color:var(--accent3); border:1px solid rgba(48,209,88,.25);
+    opacity:0; transform:translateY(15px);
+    transition: all 0.8s cubic-bezier(.25,.46,.45,.94) 1.3s;
+    margin-top:28px; font-size:13px; letter-spacing:5px; text-transform:uppercase;
+    font-weight:500; color:var(--dim);
+  }
+  .phone-slide.active .phone-slide-tag {
+    opacity:0.7; transform:translateY(0);
+  }
+
+  /* Shimmer on model text */
+  .phone-slide.active .phone-slide-model {
+    animation: textShimmer 4s ease-in-out 2s infinite;
+    background-size:200% 100%;
+  }
+
+  @keyframes glowPulse {
+    0%,100% { transform:scale(1); opacity:0.15; }
+    50% { transform:scale(1.15); opacity:0.25; }
+  }
+  @keyframes streakSweep {
+    0% { transform:translateX(-60%) rotate(-2deg); opacity:0; }
+    20% { opacity:1; }
+    80% { opacity:1; }
+    100% { transform:translateX(60%) rotate(-2deg); opacity:0; }
+  }
+  @keyframes textShimmer {
+    0%,100% { background-position:0% center; }
+    50% { background-position:100% center; }
   }
 
   /* Carousel dots */
   .phone-dots {
     position:absolute; bottom:70px; left:50%; transform:translateX(-50%);
-    display:flex; gap:8px; z-index:3;
+    display:flex; gap:10px; z-index:3;
   }
   .phone-dot {
     width:8px; height:8px; border-radius:50%;
-    background:rgba(255,255,255,.2); transition:all .4s ease;
+    background:rgba(255,255,255,.15); transition:all .5s cubic-bezier(.25,.46,.45,.94);
   }
-  .phone-dot.active { background:var(--white); transform:scale(1.2); }
+  .phone-dot.active { background:var(--white); transform:scale(1.3); box-shadow:0 0 12px rgba(255,255,255,.3); }
 
   /* ════════════════ REPAIR ════════════════ */
   .repair-hero-text {
@@ -585,29 +643,38 @@ const phones=[
   {
     brand:'Apple',
     model:'iPhone 17 Pro',
-    img:'https://www.apple.com/v/iphone-17-pro/a/images/overview/product-viewer/initial__fo4stdzx5uy6_large_2x.jpg',
-    bg:'linear-gradient(135deg,#1a0a00,#2d1500,#0a0a0a)',
+    bg:'linear-gradient(135deg,#0a0a0f,#111118,#0a0a0f)',
+    glow:'#8e8e93',
+    gradient:'linear-gradient(135deg,#e8e8ed 0%,#a1a1a6 40%,#e8e8ed 60%,#8e8e93 100%)',
+    streak:'linear-gradient(90deg,transparent,rgba(232,232,237,.4),transparent)',
+    line:'#86868b',
   },
   {
     brand:'Samsung',
     model:'Galaxy S25 Ultra',
-    img:'https://images.samsung.com/is/image/samsung/assets/uk/2501/smartphones/galaxy-s25/compare-table/s25ultra_titanium-silverblue.png',
-    bg:'linear-gradient(135deg,#060818,#0c1a2e,#050510)',
-    blend:'lighten',
+    bg:'linear-gradient(135deg,#050510,#0a1028,#050510)',
+    glow:'#8c9eff',
+    gradient:'linear-gradient(135deg,#b3c4ff 0%,#5c6bc0 40%,#b3c4ff 60%,#3949ab 100%)',
+    streak:'linear-gradient(90deg,transparent,rgba(140,158,255,.5),transparent)',
+    line:'#5c6bc0',
   },
   {
     brand:'Xiaomi',
     model:'15 Ultra',
-    img:'https://fdn2.gsmarena.com/vv/pics/xiaomi/xiaomi-15-ultra-5.jpg',
-    bg:'linear-gradient(135deg,#1a0800,#1e1000,#0a0a0a)',
-    blend:'lighten',
+    bg:'linear-gradient(135deg,#0f0804,#1a0c02,#0f0804)',
+    glow:'#ff6e40',
+    gradient:'linear-gradient(135deg,#ffab91 0%,#ff6e40 40%,#ffab91 60%,#e64a19 100%)',
+    streak:'linear-gradient(90deg,transparent,rgba(255,110,64,.5),transparent)',
+    line:'#ff6e40',
   },
   {
     brand:'Samsung',
     model:'Galaxy A56',
-    img:'https://api.samsungmobilepress.com/api/v1/file/B9C14E432C1BF897D582FE817FC9367183CF59051B1BA191E37F356972A83FA5F2E483CAEE6B522BA5182EC2A5DEC534E5BBB11DB1CFE09ABEB42DA7DFE9582C02A952AB0C191CC44037C4AA4D5AECDF279EADD2DA9D3D510ACB58B642DEB837223F9ADA59715AED09DE235FD3D9B16D6BB2C77DFB4581F10703541C70F89707D1FA27591BC5FF5B0FE44D07BEF05D1F',
-    bg:'linear-gradient(135deg,#0a1a0a,#081810,#050510)',
-    blend:'lighten',
+    bg:'linear-gradient(135deg,#040f08,#081a0e,#040f08)',
+    glow:'#69f0ae',
+    gradient:'linear-gradient(135deg,#b9f6ca 0%,#69f0ae 40%,#b9f6ca 60%,#00c853 100%)',
+    streak:'linear-gradient(90deg,transparent,rgba(105,240,174,.5),transparent)',
+    line:'#69f0ae',
   },
 ];
 
@@ -620,21 +687,21 @@ function buildPhoneCarousel() {
   wrap.innerHTML = ''; dots.innerHTML = '';
 
   phones.forEach((p, i) => {
-    // Slide
     const slide = document.createElement('div');
     slide.className = 'phone-slide';
     slide.id = 'pslide' + i;
     slide.innerHTML = `
       <div class="phone-slide-bg" style="background:${p.bg}"></div>
-      <img class="phone-slide-img" src="${p.img}" alt="${p.brand} ${p.model}" style="${p.blend ? 'mix-blend-mode:'+p.blend : ''}" loading="lazy">
-      <div class="phone-slide-info">
-        <div class="phone-slide-brand">${p.brand}</div>
-        <div class="phone-slide-model">${p.model}</div>
+      <div class="phone-slide-glow" style="background:${p.glow}"></div>
+      <div class="phone-slide-streak" style="background:${p.streak}"></div>
+      <div class="phone-slide-content">
+        <div class="phone-slide-brand" style="color:${p.line}">${p.brand}</div>
+        <div class="phone-slide-model" style="background-image:${p.gradient}">${p.model}</div>
+        <div class="phone-slide-line" style="background:${p.line}"></div>
         <div class="phone-slide-tag">Disponible en magasin</div>
       </div>`;
     wrap.appendChild(slide);
 
-    // Dot
     const dot = document.createElement('div');
     dot.className = 'phone-dot';
     dot.id = 'pdot' + i;
@@ -818,7 +885,7 @@ function resetElements(sceneEl){
 }
 
 // Scene durations: s2 (phone carousel) gets longer to show all phones
-const sceneDurations = { s2: phones.length * 4000 + 2000 }; // 4s per phone + buffer
+const sceneDurations = { s2: phones.length * 5000 + 2000 }; // 5s per phone + buffer
 const defaultDuration = 10000;
 let sceneTimeout = null;
 
@@ -841,7 +908,7 @@ function enterScene(id) {
   if (id === 's2') {
     phoneIdx = 0;
     showPhoneSlide(0);
-    phoneTimer = setInterval(nextPhoneSlide, 4000);
+    phoneTimer = setInterval(nextPhoneSlide, 5000);
   }
 }
 
