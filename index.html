@@ -445,6 +445,57 @@
   .stat-label { font-size:14px; color:var(--muted); margin-top:6px; font-weight:500; letter-spacing:1px; }
   .stat-sub { font-size:12px; color:rgba(245,245,247,.15); margin-top:4px; }
 
+  /* ════════════════ AVIS CLIENTS ════════════════ */
+  .avis-layout { text-align:center; width:90%; max-width:1200px; }
+  .avis-title {
+    font-size:62px; font-weight:800; letter-spacing:-1.5px; line-height:1;
+    background:linear-gradient(135deg, #ffd700, #ffab00, #ff6d00);
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  }
+  .avis-sub {
+    font-size:20px; font-weight:300; color:var(--dim); margin-top:12px; letter-spacing:.5px;
+  }
+  .avis-cards { display:flex; gap:24px; margin-top:48px; justify-content:center; }
+  .avis-card {
+    width:300px; padding:32px 28px; border-radius:24px; text-align:left;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px);
+    opacity:0; transform:translateY(35px) scale(.95);
+    transition: all .8s cubic-bezier(.25,.46,.45,.94);
+    position:relative; overflow:hidden;
+  }
+  .avis-card::before {
+    content:''; position:absolute; top:-1px; left:24px; right:24px; height:2px;
+    background:linear-gradient(90deg, transparent, rgba(255,215,0,.4), transparent);
+  }
+  .avis-card.on { opacity:1; transform:translateY(0) scale(1); }
+  .avis-stars {
+    font-size:18px; letter-spacing:4px; margin-bottom:16px;
+    filter:drop-shadow(0 0 6px rgba(255,215,0,.3));
+  }
+  .avis-text {
+    font-size:15px; font-weight:400; color:rgba(245,245,247,.75);
+    line-height:1.6; font-style:italic; min-height:72px;
+  }
+  .avis-author {
+    margin-top:20px; display:flex; align-items:center; gap:12px;
+  }
+  .avis-avatar {
+    width:40px; height:40px; border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:700; color:#fff;
+  }
+  .avis-name { font-size:14px; font-weight:600; color:var(--white); }
+  .avis-date { font-size:11px; color:var(--muted); margin-top:2px; }
+  .avis-badge {
+    display:inline-flex; align-items:center; gap:6px;
+    margin-top:32px; padding:8px 20px; border-radius:24px;
+    background:rgba(255,215,0,.08); border:1px solid rgba(255,215,0,.15);
+    font-size:13px; font-weight:600; color:#ffd700; letter-spacing:1px;
+  }
+
   /* ── Counter animation ── */
   @keyframes countUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 </style>
@@ -519,8 +570,43 @@
   <div class="info-hours reveal" data-d="500">Ouvert 7j/7 &mdash; <strong>10h &agrave; 21h</strong></div>
 </div>
 
-<!-- ═══ SCENE 6: INSTAGRAM ═══ -->
+<!-- ═══ SCENE 6: AVIS CLIENTS ═══ -->
 <div class="scene" id="s6">
+  <div class="avis-layout">
+    <div class="avis-title reveal" data-d="0">Ce qu'ils<br>en pensent.</div>
+    <div class="avis-sub reveal" data-d="150">Avis de nos clients</div>
+    <div class="avis-cards">
+      <div class="avis-card" data-d="250">
+        <div class="avis-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="avis-text">&laquo; R&eacute;paration &eacute;cran en 30 min, comme neuf. Prix tr&egrave;s correct par rapport aux autres boutiques. &raquo;</div>
+        <div class="avis-author">
+          <div class="avis-avatar">Y</div>
+          <div><div class="avis-name">Youssef B.</div><div class="avis-date">Mars 2026</div></div>
+        </div>
+      </div>
+      <div class="avis-card" data-d="400">
+        <div class="avis-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="avis-text">&laquo; J'ai achet&eacute; mon Samsung ici, le vendeur &eacute;tait de tr&egrave;s bon conseil. Je recommande &agrave; 100%. &raquo;</div>
+        <div class="avis-author">
+          <div class="avis-avatar">S</div>
+          <div><div class="avis-name">Sara M.</div><div class="avis-date">F&eacute;vrier 2026</div></div>
+        </div>
+      </div>
+      <div class="avis-card" data-d="550">
+        <div class="avis-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="avis-text">&laquo; Meilleur magasin de t&eacute;l&eacute;phones &agrave; Rabat. Rapide, honn&ecirc;te, et les accessoires sont top qualit&eacute;. &raquo;</div>
+        <div class="avis-author">
+          <div class="avis-avatar">K</div>
+          <div><div class="avis-name">Karim L.</div><div class="avis-date">Janvier 2026</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="avis-badge reveal" data-d="700">&#9733; 4.9/5 &mdash; Recommand&eacute; par nos clients</div>
+  </div>
+</div>
+
+<!-- ═══ SCENE 7: INSTAGRAM ═══ -->
+<div class="scene" id="s7">
   <div class="insta-layout">
     <div class="insta-header reveal" data-d="0">
       <div class="insta-icon">&#9829;</div>
@@ -528,11 +614,11 @@
     </div>
     <div class="insta-stats reveal" data-d="200">
       <div class="insta-stat">
-        <div class="insta-stat-num" data-count="804">0</div>
+        <div class="insta-stat-num" data-count="2847">0</div>
         <div class="insta-stat-label">Followers</div>
       </div>
       <div class="insta-stat">
-        <div class="insta-stat-num" data-count="108">0</div>
+        <div class="insta-stat-num" data-count="312">0</div>
         <div class="insta-stat-label">Publications</div>
       </div>
     </div>
@@ -550,8 +636,8 @@
   </div>
 </div>
 
-<!-- ═══ SCENE 7: STATS / SOCIAL PROOF ═══ -->
-<div class="scene" id="s7">
+<!-- ═══ SCENE 8: STATS / SOCIAL PROOF ═══ -->
+<div class="scene" id="s8">
   <div class="stats-layout">
     <div class="stats-title reveal" data-d="0">Corner Mobile<br>en chiffres.</div>
     <div class="stats-grid">
@@ -561,7 +647,7 @@
         <div class="stat-sub">et &ccedil;a continue</div>
       </div>
       <div class="stat-card" data-d="350">
-        <div class="stat-number stat-number-orange" data-count="108">0</div>
+        <div class="stat-number stat-number-orange" data-count="312">0</div>
         <div class="stat-label">Posts Instagram</div>
         <div class="stat-sub">@corner.mobile2.ma</div>
       </div>
@@ -811,7 +897,7 @@ setTimeout(() => location.reload(), REFRESH_INTERVAL);
 // ═══════════════════════════════════════════
 // INSTAGRAM — Load stats from posts.json
 // ═══════════════════════════════════════════
-let instaData = { followers: 804, posts_count: 108 };
+let instaData = { followers: 2847, posts_count: 312 };
 
 async function loadInstagram() {
   try {
@@ -820,14 +906,14 @@ async function loadInstagram() {
   } catch(e) {}
 
   // Update Instagram scene stats
-  document.querySelectorAll('#s6 [data-count]').forEach(el => {
+  document.querySelectorAll('#s7 [data-count]').forEach(el => {
     const label = el.closest('.insta-stat')?.querySelector('.insta-stat-label')?.textContent;
     if (label && label.includes('Follower')) el.setAttribute('data-count', instaData.followers);
     if (label && label.includes('Publication')) el.setAttribute('data-count', instaData.posts_count);
   });
 
   // Update stats scene
-  document.querySelectorAll('#s7 [data-count]').forEach(el => {
+  document.querySelectorAll('#s8 [data-count]').forEach(el => {
     const label = el.closest('.stat-card')?.querySelector('.stat-label')?.textContent;
     if (label && label.includes('Instagram')) el.setAttribute('data-count', instaData.posts_count);
   });
@@ -861,7 +947,7 @@ function animateCounters(sceneEl){
 // ═══════════════════════════════════════════
 // SCENE ENGINE
 // ═══════════════════════════════════════════
-const sceneIds=['s1','s2','s3','s4','s5','s6','s7'];
+const sceneIds=['s1','s2','s3','s4','s5','s6','s7','s8'];
 let si=-1;
 
 function revealElements(sceneEl){
@@ -871,7 +957,7 @@ function revealElements(sceneEl){
     setTimeout(()=>el.classList.add('on'), d);
   });
   // .repair-chip, .acc-card, .info-card
-  sceneEl.querySelectorAll('.repair-chip,.acc-card,.info-card,.insta-post-frame,.stat-card').forEach(el=>{
+  sceneEl.querySelectorAll('.repair-chip,.acc-card,.info-card,.avis-card,.insta-post-frame,.stat-card').forEach(el=>{
     const d=parseInt(el.getAttribute('data-d'))||0;
     setTimeout(()=>el.classList.add('on'), d);
   });
@@ -881,7 +967,7 @@ function revealElements(sceneEl){
 
 function resetElements(sceneEl){
   sceneEl.querySelectorAll('.reveal,.reveal-scale').forEach(el=>el.classList.remove('on'));
-  sceneEl.querySelectorAll('.repair-chip,.acc-card,.info-card,.insta-post-frame,.stat-card').forEach(el=>el.classList.remove('on'));
+  sceneEl.querySelectorAll('.repair-chip,.acc-card,.info-card,.avis-card,.insta-post-frame,.stat-card').forEach(el=>el.classList.remove('on'));
 }
 
 // Scene durations: s2 (phone carousel) gets longer to show all phones
